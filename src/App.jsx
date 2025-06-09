@@ -13,6 +13,11 @@ function App() {
   const [sessionCount, setSessionCount] = useState(0)
   const [hasTimerStarted, setHasTimerStarted] = useState(false)
 
+  // State untuk pengaturan suara
+  const [soundEnabled, setSoundEnabled] = useState(true)
+  const [soundVolume, setSoundVolume] = useState(0.3)
+  const [soundType, setSoundType] = useState('sine') // sine, square, triangle, sawtooth
+
   // Ref untuk interval
   const intervalRef = useRef(null)
 
@@ -35,6 +40,8 @@ function App() {
 
   // Function untuk memainkan suara notifikasi
   const playNotificationSound = () => {
+    if (!soundEnabled) return // Skip if sound is disabled
+    
     try {
       // Create a simple beep sound using Web Audio API
       const audioContext = new (window.AudioContext || window.webkitAudioContext)()
@@ -44,14 +51,44 @@ function App() {
       oscillator.connect(gainNode)
       gainNode.connect(audioContext.destination)
       
-      oscillator.frequency.value = 800 // 800 Hz tone
-      oscillator.type = 'sine'
+      // Configurable sound settings
+      oscillator.frequency.value = sessionType === 'Work' ? 800 : 600 // Different pitch for work vs break
+      oscillator.type = soundType
       
-      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime)
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5)
+      gainNode.gain.setValueAtTime(soundVolume, audioContext.currentTime)
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.8)
       
       oscillator.start(audioContext.currentTime)
-      oscillator.stop(audioContext.currentTime + 0.5)
+      oscillator.stop(audioContext.currentTime + 0.8)
+      
+      // Play additional beeps for work completion (3 beeps) vs break completion (1 beep)
+      if (sessionType === 'Work') {
+        setTimeout(() => {
+          const osc2 = audioContext.createOscillator()
+          const gain2 = audioContext.createGain()
+          osc2.connect(gain2)
+          gain2.connect(audioContext.destination)
+          osc2.frequency.value = 800
+          osc2.type = soundType
+          gain2.gain.setValueAtTime(soundVolume, audioContext.currentTime)
+          gain2.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3)
+          osc2.start(audioContext.currentTime)
+          osc2.stop(audioContext.currentTime + 0.3)
+        }, 300)
+        
+        setTimeout(() => {
+          const osc3 = audioContext.createOscillator()
+          const gain3 = audioContext.createGain()
+          osc3.connect(gain3)
+          gain3.connect(audioContext.destination)
+          osc3.frequency.value = 800
+          osc3.type = soundType
+          gain3.gain.setValueAtTime(soundVolume, audioContext.currentTime)
+          gain3.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3)
+          osc3.start(audioContext.currentTime)
+          osc3.stop(audioContext.currentTime + 0.3)
+        }, 600)
+      }
     } catch (error) {
       console.log('Audio notification not supported')
     }
@@ -252,6 +289,65 @@ function App() {
           >
             Reset
           </button>
+        </div>
+
+        {/* Sound Settings */}
+        <div className="border-t border-neutral-100 pt-4">
+          <div className="text-xs font-medium text-neutral-600 mb-3 text-center">🔊 Sound Settings</div>
+          <div className="flex flex-col gap-3">
+            {/* Sound Toggle */}
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-neutral-500">Enable Sound</span>
+              <button
+                onClick={() => setSoundEnabled(!soundEnabled)}
+                className={`w-12 h-6 rounded-full transition ${soundEnabled ? 'bg-green-500' : 'bg-neutral-300'} relative`}
+                aria-label={`Sound ${soundEnabled ? 'enabled' : 'disabled'}`}
+              >
+                <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-transform ${soundEnabled ? 'translate-x-7' : 'translate-x-1'}`}></div>
+              </button>
+            </div>
+            
+            {/* Volume Control */}
+            {soundEnabled && (
+              <>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-neutral-500">Volume</span>
+                  <input
+                    type="range"
+                    min="0.1"
+                    max="1"
+                    step="0.1"
+                    value={soundVolume}
+                    onChange={e => setSoundVolume(Number(e.target.value))}
+                    className="w-20 h-1 bg-neutral-200 rounded-lg appearance-none cursor-pointer"
+                  />
+                </div>
+                
+                {/* Sound Type */}
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-neutral-500">Sound Type</span>
+                  <select
+                    value={soundType}
+                    onChange={e => setSoundType(e.target.value)}
+                    className="text-xs bg-neutral-50 border border-neutral-200 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-indigo-300"
+                  >
+                    <option value="sine">Sine (Smooth)</option>
+                    <option value="square">Square (Sharp)</option>
+                    <option value="triangle">Triangle (Mild)</option>
+                    <option value="sawtooth">Sawtooth (Harsh)</option>
+                  </select>
+                </div>
+                
+                {/* Test Sound Button */}
+                <button
+                  onClick={playNotificationSound}
+                  className="text-xs py-1 px-3 rounded-lg bg-indigo-100 text-indigo-700 hover:bg-indigo-200 transition self-center"
+                >
+                  Test Sound
+                </button>
+              </>
+            )}
+          </div>
         </div>
         
         {/* Instructions */}

@@ -21,7 +21,13 @@ This project is part of the [roadmap.sh Pomodoro Timer challenge](https://roadma
 - **Monospace Timer Display**: Large, easy-to-read countdown timer
 
 ### 🔊 Notifications & Accessibility
-- **Audio Notifications**: Sound alerts when sessions complete (using Web Audio API)
+- **Customizable Audio Notifications**: 
+  - Sound alerts when sessions complete (using Web Audio API)
+  - Enable/disable sound toggle
+  - Volume control (10%-100%)
+  - 4 different sound types: Sine (smooth), Square (sharp), Triangle (mild), Sawtooth (harsh)
+  - Different alerts for work vs break completion (3 beeps vs 1 beep)
+  - Test sound button to preview settings
 - **Keyboard Shortcuts**: 
   - `Spacebar` - Start/Pause timer
   - `R` - Reset timer
@@ -31,7 +37,8 @@ This project is part of the [roadmap.sh Pomodoro Timer challenge](https://roadma
 ### 🎛️ User Experience
 - **Real-time Configuration**: Adjust timer durations on the fly
 - **Visual Feedback**: Clear button states and session indicators
-- **Helpful Instructions**: Built-in guide explaining the Pomodoro Technique
+- **Sound Settings Panel**: Comprehensive audio customization options
+- **Helpful Instructions**: Built-in guide explaining the Pomodoro Technique and keyboard shortcuts
 - **Keyboard Navigation**: Full accessibility support
 
 ## 🚀 Getting Started
@@ -90,20 +97,37 @@ src/
 ## 🎮 How to Use
 
 1. **Configure Timers**: Set your preferred work, short break, and long break durations
-2. **Start Working**: Click "Start" or press `Spacebar` to begin a work session
-3. **Take Breaks**: The app automatically switches to break mode when work sessions complete
-4. **Stay Focused**: Use the visual indicators and audio notifications to maintain rhythm
-5. **Track Progress**: Monitor your completed work sessions in the session counter
+2. **Customize Sound**: Use the sound settings panel to:
+   - Enable/disable notifications
+   - Adjust volume level
+   - Choose your preferred sound type
+   - Test your audio settings
+3. **Start Working**: Click "Start" or press `Spacebar` to begin a work session
+4. **Take Breaks**: The app automatically switches to break mode when work sessions complete
+5. **Stay Focused**: Use the visual indicators and audio notifications to maintain rhythm
+6. **Track Progress**: Monitor your completed work sessions in the session counter
 
 ## 🔧 Configuration
 
-Default timer settings:
-- **Work Session**: 25 minutes
-- **Short Break**: 5 minutes  
-- **Long Break**: 15 minutes
+### Timer Settings
+- **Work Session**: 25 minutes (default)
+- **Short Break**: 5 minutes (default)
+- **Long Break**: 15 minutes (default)
 - **Long Break Interval**: After every 4 work sessions
 
-All durations can be customized through the input fields in the app.
+### Sound Settings
+- **Sound Toggle**: Enable/disable audio notifications
+- **Volume Control**: Adjustable from 10% to 100%
+- **Sound Types**:
+  - **Sine Wave**: Smooth, gentle beep (default)
+  - **Square Wave**: Sharp, attention-grabbing sound
+  - **Triangle Wave**: Mild, pleasant tone
+  - **Sawtooth Wave**: Harsh, urgent alarm sound
+- **Session-specific Alerts**:
+  - Work completion: 3 beeps at 800 Hz
+  - Break completion: 1 beep at 600 Hz
+
+All settings can be customized through the app interface.
 
 ## 🎯 Features Implemented
 
@@ -112,7 +136,9 @@ All durations can be customized through the input fields in the app.
 - ✅ Automatic session switching
 - ✅ Session counter and progress tracking
 - ✅ Visual indicators for different session types
-- ✅ Sound notifications when sessions end
+- ✅ Customizable sound notifications with multiple options
+- ✅ Sound settings panel (enable/disable, volume, sound type)
+- ✅ Different audio alerts for work vs break completion
 - ✅ Responsive design with modern UI
 - ✅ Keyboard shortcuts for accessibility
 - ✅ Screen reader support
